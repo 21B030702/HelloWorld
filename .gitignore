@@ -1,0 +1,4 @@
+hello_venv/
+*.sqlite3
+*.log
+temp/
