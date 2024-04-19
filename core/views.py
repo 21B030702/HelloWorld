@@ -3,10 +3,10 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
-from .models import User, Category, Supplier, Item, Auction, Review, Purchase
+from .models import User, Category, Supplier, Item, Auction, Review, Purchase, Delivery, DeliveryStatus, Bid
 from .serializers import (
     UserSerializer, CategorySerializer, SupplierSerializer, 
-    ItemSerializer, AuctionSerializer, ReviewSerializer, PurchaseSerializer
+    ItemSerializer, AuctionSerializer, ReviewSerializer, PurchaseSerializer, DeliverySerializer, DeliveryStatusSerializer, BidSerializer
 )
 from django.contrib.auth.hashers import make_password
 from django.utils import timezone
@@ -55,6 +55,18 @@ class ReviewViewSet(viewsets.ModelViewSet):
 class PurchaseViewSet(viewsets.ModelViewSet):
     queryset = Purchase.objects.all()
     serializer_class = PurchaseSerializer
+
+class DeliveryViewSet(viewsets.ModelViewSet):
+    queryset = Delivery.objects.all()
+    serializer_class = DeliverySerializer
+
+class DeliveryStatusViewSet(viewsets.ModelViewSet):
+    queryset = DeliveryStatus.objects.all()
+    serializer_class = DeliveryStatusSerializer
+
+class BidViewSet(viewsets.ModelViewSet):
+    queryset = Bid.objects.all()
+    serializer_class = BidSerializer
 
 @api_view(['POST'])
 def regist(request):

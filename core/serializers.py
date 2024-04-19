@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User, Category, Supplier, Item, Auction, Review, Purchase
+from .models import User, Category, Supplier, Item, Auction, Review, Purchase, Delivery, DeliveryStatus, Bid
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -34,4 +34,19 @@ class ReviewSerializer(serializers.ModelSerializer):
 class PurchaseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Purchase
+        fields = '__all__'
+
+class DeliverySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Delivery
+        fields = '__all__'
+
+class DeliveryStatusSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DeliveryStatus
+        fields = '__all__'
+
+class BidSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Bid
         fields = '__all__'

@@ -2,7 +2,7 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from .views import (
     UserViewSet, CategoryViewSet, SupplierViewSet, 
-    ItemViewSet, AuctionViewSet, ReviewViewSet, PurchaseViewSet
+    ItemViewSet, AuctionViewSet, ReviewViewSet, PurchaseViewSet, DeliveryViewSet, BidViewSet, DeliveryStatusViewSet
 )
 from .views import regist, CustomAuthToken
 from django.urls import re_path
@@ -18,6 +18,9 @@ router.register(r'items', ItemViewSet)
 router.register(r'auctions', AuctionViewSet)
 router.register(r'reviews', ReviewViewSet)
 router.register(r'purchases', PurchaseViewSet)
+router.register(r'deliveries', DeliveryViewSet)
+router.register(r'bids', BidViewSet)
+router.register(r'delivery_statuses', DeliveryStatusViewSet)
 
 schema_view = get_schema_view(
    openapi.Info(

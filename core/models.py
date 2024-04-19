@@ -3,6 +3,13 @@ from django.db.models import JSONField
 from django.contrib.auth.models import AbstractUser
 # Create your models here.
 
+STATUS_CHOICES = [
+    ('processing', 'Processing'),
+    ('shipped', 'Shipped'),
+    ('delivered', 'Delivered'),
+    ('canceled', 'Canceled'),
+]
+
 class User(AbstractUser):
     age = models.PositiveIntegerField(null=True, blank=True)
     gender = models.CharField(max_length=30, blank=True)
@@ -10,6 +17,7 @@ class User(AbstractUser):
     multiple_addresses = models.JSONField(blank=True, null=True)  # Предполагается использование PostgreSQL
     multiple_phones = models.JSONField(blank=True, null=True)
     multiple_credit_cards = models.JSONField(blank=True, null=True)
+
 
 class Category(models.Model):
     name = models.CharField(max_length=255)
@@ -51,7 +59,7 @@ class Auction(models.Model):
     end_time = models.DateTimeField()
     
     def __str__(self):
-        return self.item
+        return self.item.name
 
 
 class Review(models.Model):
@@ -65,3 +73,38 @@ class Purchase(models.Model):
     item = models.ForeignKey(Item, related_name='purchased', on_delete=models.CASCADE)
     purchase_date = models.DateTimeField(auto_now_add=True)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
+
+    def __str__(self):
+        return f"Purchase {self.pk} by {self.user.username}"
+
+class DeliveryStatus(models.Model):
+    purchase = models.ForeignKey(
+        'Purchase', 
+        related_name='delivery_statuses', 
+        on_delete=models.CASCADE
+    )
+    status = models.CharField(max_length=50, choices=STATUS_CHOICES)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"DeliveryStatus for {self.purchase} is {self.status}"
+    
+class Delivery(models.Model):
+    purchase = models.ForeignKey(
+        Purchase, 
+        related_name='deliveries',
+        on_delete=models.CASCADE
+        )
+    delivery_status = models.CharField(max_length=50, choices=STATUS_CHOICES)
+    expected_delivery_date = models.DateField()
+    actual_delivery_date = models.DateField(null=True, blank=True)
+    carrier = models.CharField(max_length=255)
+
+class Bid(models.Model):
+    item = models.ForeignKey(Item, related_name='bids', on_delete=models.CASCADE)
+    bidder = models.ForeignKey(User, related_name='bids', on_delete=models.CASCADE)
+    bid_amount = models.DecimalField(max_digits=10, decimal_places=2)
+    bid_time = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.bidder.username} bids {self.bid_amount} on {self.item.name}"
